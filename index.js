@@ -28,6 +28,7 @@ async function run() {
     await client.connect();
     const collegeCollection = client.db("Admission").collection("college");
     const allCollegeCollection = client.db("Admission").collection("allColleges");
+    const candidateCollection = client.db("Admission").collection("candidate");
 
     app.get("/colleges", async (req, res) => {
       const result = await collegeCollection.find().toArray()
@@ -53,6 +54,37 @@ async function run() {
       // console.log(id);
       const query = { _id: new ObjectId(id) }
       const result = await allCollegeCollection.findOne(query)
+      res.send(result);
+    })
+
+    app.get('/apply/:id', async (req, res) => {
+      const id = req.params.id;
+      // console.log(id);
+      const query = { _id: new ObjectId(id) }
+      const result = await allCollegeCollection.findOne(query)
+      res.send(result);
+    })
+
+    app.post('/candidate', async (req, res) => {
+      const item = req.body;
+      const result = await candidateCollection.insertOne(item)
+      res.send(result);
+    })
+    app.get('/candidate', async (req, res) => {
+      const result = await candidateCollection.find().toArray();
+
+      const college=await allCollegeCollection.find().toArray();
+
+      for(let i=0;i<result.length;i++){
+        for (let j=0;j<college.length;j++){
+          if(result[i].id==college[j]._id){
+            result[i].id=college[j];
+          }
+        }
+      }
+      // console.log(result)
+      
+      
       res.send(result);
     })
 
