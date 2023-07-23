@@ -27,18 +27,25 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
     const collegeCollection = client.db("Admission").collection("college");
+    const allCollegeCollection = client.db("Admission").collection("allColleges");
 
-    app.get("/colleges", async(req, res) => {
-        const result = await collegeCollection.find().toArray()
-        res.send(result)
+    app.get("/colleges", async (req, res) => {
+      const result = await collegeCollection.find().toArray()
+      res.send(result)
     })
 
-    app.get('/eachCollege/:id', async(req, res) => {
-        const id = req.params.id;
-        // console.log(id);
-        const query = {_id: new ObjectId(id)}
-        const result =await collegeCollection.findOne(query)
-        res.send(result);
+    app.get('/eachCollege/:id', async (req, res) => {
+      const id = req.params.id;
+      // console.log(id);
+      const query = { _id: new ObjectId(id) }
+      const result = await collegeCollection.findOne(query)
+      res.send(result);
+    })
+
+
+    app.get("/allColleges", async (req, res) => {
+      const result = await allCollegeCollection.find().toArray()
+      res.send(result)
     })
 
 
@@ -55,9 +62,9 @@ run().catch(console.dir);
 
 
 app.get('/', (req, res) => {
-    res.send('Surver is Running')
+  res.send('Surver is Running')
 })
 
 app.listen(port, () => {
-    console.log(`surver is running on port ${port}`);
+  console.log(`surver is running on port ${port}`);
 })
