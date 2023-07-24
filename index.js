@@ -29,6 +29,7 @@ async function run() {
     const collegeCollection = client.db("Admission").collection("college");
     const allCollegeCollection = client.db("Admission").collection("allColleges");
     const candidateCollection = client.db("Admission").collection("candidate");
+    const reviewCollection = client.db("Admission").collection("review");
 
     app.get("/colleges", async (req, res) => {
       const result = await collegeCollection.find().toArray()
@@ -59,7 +60,6 @@ async function run() {
 
     app.get('/apply/:id', async (req, res) => {
       const id = req.params.id;
-      // console.log(id);
       const query = { _id: new ObjectId(id) }
       const result = await allCollegeCollection.findOne(query)
       res.send(result);
@@ -70,6 +70,7 @@ async function run() {
       const result = await candidateCollection.insertOne(item)
       res.send(result);
     })
+
     app.get('/candidate', async (req, res) => {
       const result = await candidateCollection.find().toArray();
 
@@ -86,6 +87,17 @@ async function run() {
       
       
       res.send(result);
+    })
+
+    app.post('/review', async (req, res) => {
+      const item = req.body;
+      const result = await reviewCollection.insertOne(item)
+      res.send(result);
+    })
+
+    app.get("/getreview", async (req, res) => {
+      const result = await reviewCollection.find().toArray()
+      res.send(result)
     })
 
 
